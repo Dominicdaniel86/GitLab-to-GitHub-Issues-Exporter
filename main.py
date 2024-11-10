@@ -6,7 +6,8 @@ project_id = os.getenv('PROJECT_ID')
 url = f'https://gitlab.com/api/v4/projects/{project_id}/issues'
 
 try:
-    response = requests.get(url)
+    response = requests.get(url,
+                            params={'per_page': 100, 'page': 1})
     if response.status_code == 200:
         data = response.json()
         for d in data:
