@@ -9,3 +9,15 @@ class GitHubIssue:
         self.assignees = assignees
         self.state = state
         self.state_reason = state_reason
+
+    def __str__(self):
+        return (f"Issue ID: {self.id}\n"
+                f"Title: {self.title}\n"
+                f"Description: {self.description}\n"
+                f"Assignee: {self.assignee}\n"
+                f"Milestone: {self.milestone}\n"
+                f"Labels: {', '.join(self.labels)}\n"
+                f"Assignees: {', '.join(self.assignees)}\n"
+                f"State: {self.state}\n"
+                f"State Reason: {self.state_reason}")
+    

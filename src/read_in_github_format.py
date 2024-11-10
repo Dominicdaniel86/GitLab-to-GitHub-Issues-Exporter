@@ -10,15 +10,15 @@ def read_from_gitlab(url):
         if response.status_code == 200:
             data = response.json()
             for d in data:
-                id = str(d['references']['short'])
-                title = str(d['title'])
-                description = str(d['description'])
-                assignee = str(d['assignee'])
-                labels = str(d['labels'])
-                assignees = str(d['assignees'])
-                state = str(d['state'])
-                state_reason = ""
-                milestone = ""
+                id = d['references']['short']
+                title = d['title']
+                description = d['description']
+                assignee = d['assignee']
+                labels = d['labels']
+                assignees = d['assignees']
+                state = d['state']
+                state_reason = None
+                milestone = None
 
                 if d['milestone'] is not None:
                     milestone = str(d['milestone']['iid'])
@@ -32,3 +32,4 @@ def read_from_gitlab(url):
 
     except requests.exceptions.RequestException as e:
         print("An error occured", e)
+
