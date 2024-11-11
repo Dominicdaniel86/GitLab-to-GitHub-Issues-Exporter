@@ -1,9 +1,8 @@
 class GitHubIssue:
-    def __init__(self, id, title, description, assignee, milestone, labels, assignees, state, state_reason):
+    def __init__(self, id, title, description, milestone, labels, assignees, state, state_reason):
         self.id = id
         self.title = title
         self.description = description
-        self.assignee = assignee
         self.milestone = milestone
         self.labels = labels
         self.assignees = assignees
@@ -14,7 +13,6 @@ class GitHubIssue:
         return (f"Issue ID: {self.id}\n"
                 f"Title: {self.title}\n"
                 f"Description: {self.description}\n"
-                f"Assignee: {self.assignee}\n"
                 f"Milestone: {self.milestone}\n"
                 f"Labels: {', '.join(self.labels)}\n"
                 f"Assignees: {', '.join(self.assignees)}\n"
