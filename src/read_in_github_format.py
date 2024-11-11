@@ -2,10 +2,12 @@ import requests
 
 from objects import GitHubIssue
 
-def read_from_gitlab(url):
+def read_from_gitlab(url, token):
     issues = []
+    headers = { 'PRIVATE-TOKEN': f'{token}'}
     try:
         response = requests.get(url,
+                                headers=headers,
                                 params={'per_page': 100, 'page': 1})
         if response.status_code == 200:
             data = response.json()
@@ -13,7 +15,6 @@ def read_from_gitlab(url):
                 id = d['references']['short']
                 title = d['title']
                 description = d['description']
-                assignee = d['assignee']
                 labels = d['labels']
                 assignees = d['assignees']
                 state = d['state']
@@ -21,9 +22,9 @@ def read_from_gitlab(url):
                 milestone = None
 
                 if d['milestone'] is not None:
-                    milestone = str(d['milestone']['iid'])
+                    milestone = d['milestone']['iid']
 
-                new_issue = GitHubIssue(id, title, description, assignee, milestone, labels, assignees, state, state_reason)
+                new_issue = GitHubIssue(id, title, description, milestone, labels, assignees, state, state_reason)
                 issues.append(new_issue)
             return issues
 
