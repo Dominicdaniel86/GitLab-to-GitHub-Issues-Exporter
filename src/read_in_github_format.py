@@ -3,7 +3,8 @@ import requests
 from objects import GitHubIssue
 
 def read_from_gitlab(url, token):
-    issues = []
+    issues = {}
+    highest_id = 0
     headers = { 'PRIVATE-TOKEN': f'{token}'}
     try:
         response = requests.get(url,
@@ -11,22 +12,26 @@ def read_from_gitlab(url, token):
                                 params={'per_page': 100, 'page': 1})
         if response.status_code == 200:
             data = response.json()
+            if len(data) != 0:
+                highest_id = data[0]['references']['short'][1:]
+
             for d in data:
-                id = d['references']['short']
+                id = int(d['references']['short'][1:])
                 title = d['title']
                 description = d['description']
                 labels = d['labels']
                 assignees = d['assignees']
                 state = d['state']
-                state_reason = None
+                if state == "opened":
+                    state = "open"
                 milestone = None
 
                 if d['milestone'] is not None:
                     milestone = d['milestone']['iid']
 
-                new_issue = GitHubIssue(id, title, description, milestone, labels, assignees, state, state_reason)
-                issues.append(new_issue)
-            return issues
+                new_issue = GitHubIssue(id, title, description, milestone, labels, assignees, state)
+                issues[id] = new_issue
+            return issues, int(highest_id)
 
         else:
             print("failed to retrieve data (status code: " + str(response.status_code) + ")")
@@ -37,15 +42,18 @@ def read_from_gitlab(url, token):
 
 def read_from_github(url, token):
     headers = { 'Authorization': f'Bearer {token}'}
-    issues = []
+    issues = {}
+    highest_id = 0
     try:
-        response = requests.get(url,
+        response = requests.get(url + "?state=all",
                                 headers=headers)
         if response.status_code == 200:
             data = response.json()
+            if len(data) != 0:
+                highest_id = data[0]['number']
 
             for d in data:
-                id = d['number']
+                id = int(d['number'])
                 title = d['title']
                 # description: TODO
                 if d['milestone'] is not None:
@@ -59,11 +67,10 @@ def read_from_github(url, token):
                 for a in d['assignees']:
                     assignees.append(a['login'])
                 state = d['state']
-                state_reason = d['state_reason'] # might be None
 
-                new_issue = GitHubIssue(id, title, "description", milestone, labels, assignees, state, state_reason)
-                issues.append(new_issue)
-            return issues
+                new_issue = GitHubIssue(id, title, "description", milestone, labels, assignees, state)
+                issues[id] = new_issue
+            return issues, int(highest_id)
 
         else:
             print("failed to retrieve data (status code: " + str(response.status_code) + ")")
