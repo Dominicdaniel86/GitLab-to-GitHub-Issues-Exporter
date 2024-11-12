@@ -26,14 +26,14 @@ class GitHubIssue:
                 # self.description == other.description and
                 self.milestone == other.milestone and
                 self.labels == other.labels and
-                # self.assignees == other.assignees and
+                self.assignees == other.assignees and
                 self.state == other.state)
     
     def to_add_dict(self):
         return {
             'title': self.title,
             # 'body': self.description,
-            # 'assignees': self.assignees,
+            'assignees': self.assignees,
             'milestone': self.milestone,
             'labels': self.labels
         }
@@ -42,7 +42,7 @@ class GitHubIssue:
         return {
             'title': self.title,
             # 'body': self.description,
-            # 'assignees': self.assignees,
+            'assignees': self.assignees,
             'milestone': self.milestone,
             'labels': self.labels,
             'state': self.state,

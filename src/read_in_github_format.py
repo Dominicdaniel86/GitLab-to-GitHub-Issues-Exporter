@@ -20,7 +20,9 @@ def read_from_gitlab(url, token):
                 title = d['title']
                 description = d['description']
                 labels = d['labels']
-                assignees = d['assignees']
+                assignees = []
+                for assignee in d['assignees']:
+                    assignees.append(assignee['username'])
                 state = d['state']
                 if state == "opened":
                     state = "open"
