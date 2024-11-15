@@ -44,6 +44,26 @@ def read_github_issues(url, token):
         print(f"error: an error occured while trying to retrieve GitHub issues - {e}")
 
 
+def check_if_github_issue_exists(url, issue_id, token):
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    try:
+        response = requests.get(f'{url}/issues/{issue_id}',
+                                headers=headers)
+        if response.status_code == 200:
+            return True # exists
+        elif response.status_code == 404:
+            return False # not created
+        elif response.status_code == 410:
+            return True # deleted
+        else:
+            print(f"error: received unexpected error code while trying to check if GitHub issue exists - {response.status_code}")
+    
+    except requests.exceptions.RequestException as e:
+        print(f"error: an error occured while trying to check if GitHub issue exists - {e}")
+
+
 def read_comments():
     pass
 
