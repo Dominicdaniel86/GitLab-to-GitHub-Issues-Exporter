@@ -17,7 +17,7 @@ def read_github_issues(url, token):
         data = response.json()
         
         for current_issue in data:
-            id = current_issue['number']
+            id = int(current_issue['number'])
             title = current_issue['title']
             # description
             labels = []

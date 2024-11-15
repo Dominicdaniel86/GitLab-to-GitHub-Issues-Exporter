@@ -29,7 +29,7 @@ class Issue:
                 self.milestone == other.milestone and
                 self.assignees == other.assignees)
 
-    def to_add_dict(self):
+    def to_create_dict(self):
         return {
             'title': self.title,
             # 'body': self.description,
@@ -38,8 +38,9 @@ class Issue:
             'assignees': self.assignees
         }
 
-    def to_modify_dict(self):
+    def to_update_dict(self):
         return {
+            'id': self.id,
             'title': self.title,
             # 'body': self.description,
             'labels': self.labels,

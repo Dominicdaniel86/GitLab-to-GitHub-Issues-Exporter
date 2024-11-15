@@ -23,14 +23,20 @@ def main():
     
     github_issues = github_get.read_github_issues(github_url, github_token)
     github_max_id = max(github_issues.keys())
-    github_max_hidden_id = get_hidden_github_issue_id(github_url, github_token, github_max_id)
+    github_hidden_max_id = get_hidden_github_issue_id(github_url, github_token, github_max_id)
 
     print(f"debug: max GitLab ID = {gitlab_max_id}")
     print(f"debug: max GitHub ID = {github_max_id}")
-    print(f"debug: max hidden GitHub ID = {github_max_hidden_id}")
+    print(f"debug: max hidden GitHub ID = {github_hidden_max_id}")
 
     # export issues to GitHub
-    export_issues_to_github()
+    modified_issues, new_issues, undeleted_issues, new_placeholders = \
+        export_issues_to_github(github_url, github_token, gitlab_issues, github_issues, gitlab_max_id, github_max_id, github_hidden_max_id)
+    
+    print(f"Updated {len(modified_issues)} issues: {modified_issues}")
+    print(f"Created {len(new_issues)} new issues: {new_issues}")
+    print(f"{len(undeleted_issues)} undeleted issues: {undeleted_issues}")
+    print(f"Created {len(new_placeholders)} placeholders: {new_placeholders}")
 
 if __name__ == "__main__":
     main()

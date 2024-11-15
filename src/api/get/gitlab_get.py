@@ -18,7 +18,7 @@ def read_gitlab_issues(url, token):
         data = response.json()
 
         for current_issue in data:
-            id = current_issue['references']['short'][1:]
+            id = int(current_issue['references']['short'][1:])
             title = current_issue['title']
             description = current_issue['description']
             labels = current_issue['labels']
