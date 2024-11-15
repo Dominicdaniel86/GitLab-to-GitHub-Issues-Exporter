@@ -21,3 +21,13 @@ def get_not_included_labels(issues, existing_labels):
                 new_labels.append(issue_label)
     
     return new_labels
+
+def get_not_included_milestones(issues, existing_milestones):
+    missing_milestones = []
+
+    for current_issue in issues.values():
+        if current_issue.milestone not in existing_milestones and current_issue.milestone not in missing_milestones:
+            missing_milestones.append(current_issue.milestone)
+
+    missing_milestones.remove(None)    
+    return missing_milestones
