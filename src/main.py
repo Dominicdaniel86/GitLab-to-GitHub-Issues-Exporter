@@ -16,7 +16,6 @@ import_assignees: bool = False
 gitlab_url = f'https://gitlab.com/api/v4/projects/{gitlab_project_id}'
 github_url = f"https://api.github.com/repos/{github_repo_owner}/{github_project_name}"
 
-
 def main():
     gitlab_issues = gitlab_get.read_gitlab_issues(gitlab_url, gitlab_token)
     gitlab_max_id = max(gitlab_issues.keys())
@@ -30,13 +29,14 @@ def main():
     print(f"debug: max hidden GitHub ID = {github_hidden_max_id}")
 
     # export issues to GitHub
-    modified_issues, new_issues, undeleted_issues, new_placeholders = \
+    modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels = \
         export_issues_to_github(github_url, github_token, gitlab_issues, github_issues, gitlab_max_id, github_max_id, github_hidden_max_id)
     
     print(f"Updated {len(modified_issues)} issues: {modified_issues}")
     print(f"Created {len(new_issues)} new issues: {new_issues}")
     print(f"{len(undeleted_issues)} undeleted issues: {undeleted_issues}")
     print(f"Created {len(new_placeholders)} placeholders: {new_placeholders}")
+    print(f"Created {len(new_labels)} new labels: {new_labels}")
 
 if __name__ == "__main__":
     main()

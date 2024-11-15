@@ -1,4 +1,6 @@
+from api.get import github_get
 from api.modify.github_modify import create_github_issue, update_github_issue
+from services.helper import get_not_included_labels
 
 
 def export_issues_to_github(github_url, github_token, gitlab_issues, github_issues, gitlab_max_id, github_max_id, github_hidden_max_id):
@@ -8,6 +10,11 @@ def export_issues_to_github(github_url, github_token, gitlab_issues, github_issu
     new_issues = [] # { id, title }
     undeleted_issues = [] # { id, title }
     new_placeholders = [] # {id}
+    new_labels = [] # { name }
+
+    # determine new labels
+    labels = github_get.read_labels(github_url, github_token)
+    new_labels = get_not_included_labels(gitlab_issues, labels)
 
     # determine undeleted issues on GitHub
     for key in github_issues:
@@ -37,4 +44,4 @@ def export_issues_to_github(github_url, github_token, gitlab_issues, github_issu
                 update_github_issue(github_url, github_token, gitlab_issues[index])
     
     # return results
-    return modified_issues, new_issues, undeleted_issues, new_placeholders
+    return modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels
