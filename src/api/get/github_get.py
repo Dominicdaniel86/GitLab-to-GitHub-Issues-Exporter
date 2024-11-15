@@ -28,7 +28,7 @@ def read_github_issues(url, token):
 
             milestone = None
             if current_issue['milestone'] is not None:
-                milestone = current_issue['milestone']['number']
+                milestone = current_issue['milestone']['title']
 
             assignees = []
             for current_assignee in current_issue['assignees']:
@@ -91,7 +91,7 @@ def read_milestones(url, token):
     headers = {
         'Authorization': f'Bearer {token}'
     }
-    milestones = []
+    milestones = {} # id: title
     try:
         response = requests.get(f'{url}/milestones',
                                 headers=headers)
@@ -101,7 +101,7 @@ def read_milestones(url, token):
         
         data = response.json()
         for current_milestone in data:
-            milestones.append(current_milestone['title'])
+            milestones[current_milestone['id']] = current_milestone['title']
         return milestones
     
     except requests.exceptions.RequestException as e:

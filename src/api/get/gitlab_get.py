@@ -29,7 +29,7 @@ def read_gitlab_issues(url, token):
 
             milestone = None
             if current_issue['milestone'] is not None:
-                milestone = current_issue['milestone']['iid']
+                milestone = current_issue['milestone']['title']
             
             assignees = []
             for current_assignee in current_issue['assignees']:
