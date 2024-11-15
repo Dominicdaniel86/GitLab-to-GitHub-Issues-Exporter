@@ -32,6 +32,9 @@ def export_issues_to_github(github_url, github_token, gitlab_issues, github_issu
         else:
             create_github_issue(github_url, github_token, gitlab_issues[index])
             new_issues.append([index, gitlab_issues[index].title])
+            # close new issue, if it's already closed on GitLab
+            if gitlab_issues[index].state == "closed":
+                update_github_issue(github_url, github_token, gitlab_issues[index])
     
     # return results
     return modified_issues, new_issues, undeleted_issues, new_placeholders
