@@ -24,10 +24,10 @@ class Issue:
         return (self.id == other.id and
                 self.title == other.title and
                 # self.description == other.description and
-                self.labels == other.labels and
+                sorted(self.labels) == sorted(other.labels) and
                 self.state == other.state and
                 self.milestone == other.milestone and
-                self.assignees == other.assignees)
+                sorted(self.assignees) == sorted(other.assignees))
 
     def to_create_dict(self):
         return {
