@@ -67,11 +67,45 @@ def check_if_github_issue_exists(url, issue_id, token):
 def read_comments():
     pass
 
-def read_labels():
-    pass
+def read_labels(url, token):
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    labels = []
+    try:
+        response = requests.get(f'{url}/labels',
+                                headers=headers)
+        if response.status_code != 200:
+            print(f"error: received unexpected error code while trying to retrieve GitHub labels - {response.status_code}")
+            return
+        
+        data = response.json()
+        for current_milestone in data:
+            labels.append(current_milestone['name'])
+        return labels
+    
+    except requests.exceptions.RequestException as e:
+        print(f"error: an error occured while trying to retrieve GitHub labels - {e}")
 
-def read_milestones():
-    pass
+def read_milestones(url, token):
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    milestones = []
+    try:
+        response = requests.get(f'{url}/milestones',
+                                headers=headers)
+        if response.status_code != 200:
+            print(f"error: received unexpected error code while trying to retrieve GitHub milestones - {response.status_code}")
+            return
+        
+        data = response.json()
+        for current_milestone in data:
+            milestones.append(current_milestone['title'])
+        return milestones
+    
+    except requests.exceptions.RequestException as e:
+        print(f"error: an error occured while trying to retrieve GitHub milestones - {e}")
 
 def read_asignees():
     pass
