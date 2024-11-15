@@ -1,11 +1,12 @@
 class Issue:
-    def __init__(self, id, title, description, labels, state, milestone, assignees):
+    def __init__(self, id, title, description, labels, state, milestone_id, milestone_title, assignees):
         self.id = id # int
         self.title = title # str
         self.description = description # str
         self.labels = labels # list
         self.state = state # str
-        self.milestone = milestone # str
+        self.milestone_id = milestone_id # str
+        self.milestone_title = milestone_title # int
         self.assignees = assignees # list
 
     def __str__(self):
@@ -14,7 +15,8 @@ class Issue:
                 f"Description: {self.description}\n"
                 f"Labels: {', '.join(self.labels)}\n"
                 f"State:  {self.state}\n"
-                f"Milestone: {self.milestone}\n"
+                f"Milestone ID: {self.milestone_id}\n"
+    	        f"Milestone Title: {self.milestone_title}\n"
                 f"Assignees: {', '.join(self.assignees)}\n")
 
     def __eq__(self, other):
@@ -26,7 +28,7 @@ class Issue:
                 # self.description == other.description and
                 sorted(self.labels) == sorted(other.labels) and
                 self.state == other.state and
-                self.milestone == other.milestone and
+                self.milestone_title == other.milestone_title and
                 sorted(self.assignees) == sorted(other.assignees))
 
     def to_create_dict(self):
@@ -34,7 +36,7 @@ class Issue:
             'title': self.title,
             # 'body': self.description,
             'labels': self.labels,
-            'milestone': self.milestone,
+            'milestone': self.milestone_id,
             'assignees': self.assignees
         }
 
@@ -45,6 +47,6 @@ class Issue:
             # 'body': self.description,
             'labels': self.labels,
             'state': self.state,
-            'milestone': self.milestone,
+            'milestone': self.milestone_id,
             'assignees': self.assignees
         }

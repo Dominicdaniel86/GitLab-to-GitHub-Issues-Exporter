@@ -27,15 +27,19 @@ def read_gitlab_issues(url, token):
             if state == "opened":
                 state = "open"
 
-            milestone = None
+            milestone_title = None
             if current_issue['milestone'] is not None:
-                milestone = current_issue['milestone']['title']
+                milestone_title = current_issue['milestone']['title']
+            
+            milestone_id = None
+            if current_issue['milestone'] is not None:
+                milestone_id = current_issue['milestone']['iid']
             
             assignees = []
             for current_assignee in current_issue['assignees']:
                 assignees.append(current_assignee['username'])
 
-            new_issue = Issue(id, title, description, labels, state, milestone, assignees)
+            new_issue = Issue(id, title, description, labels, state, milestone_id, milestone_title, assignees)
             issues[int(id)] = new_issue
         
         print(f"debug: read {len(issues)} issues from GitLab API")

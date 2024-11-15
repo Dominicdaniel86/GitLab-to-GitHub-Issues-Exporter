@@ -26,15 +26,19 @@ def read_github_issues(url, token):
 
             state = current_issue['state']
 
-            milestone = None
+            milestone_title = None
             if current_issue['milestone'] is not None:
-                milestone = current_issue['milestone']['title']
+                milestone_title = current_issue['milestone']['title']
+
+            milestone_id = None
+            if current_issue['milestone'] is not None:
+                milestone_id = current_issue['milestone']['number']
 
             assignees = []
             for current_assignee in current_issue['assignees']:
                 assignees.append(current_assignee['login'])
 
-            new_issue = Issue(id, title, "", labels, state, milestone, assignees)
+            new_issue = Issue(id, title, "", labels, state, milestone_id, milestone_title, assignees)
             issues[int(id)] = new_issue
 
         print(f"debug: read {len(issues)} issues from GitHub API")
@@ -101,7 +105,7 @@ def read_milestones(url, token):
         
         data = response.json()
         for current_milestone in data:
-            milestones[current_milestone['id']] = current_milestone['title']
+            milestones[current_milestone['number']] = current_milestone['title']
         return milestones
     
     except requests.exceptions.RequestException as e:

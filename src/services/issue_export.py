@@ -19,7 +19,13 @@ def export_issues_to_github(github_url, github_token, gitlab_issues, github_issu
 
     # determine missing milestones
     milestones = github_get.read_milestones(github_url, github_token)
-    missing_milestones = get_not_included_milestones(github_issues, milestones)
+    missing_milestones = get_not_included_milestones(gitlab_issues, milestones)
+
+    # replace GitLab Milestones with GitHub IDs
+    for current_issue in gitlab_issues.values():
+        for key, val in milestones.items():
+            if current_issue.milestone_title == val:
+                current_issue.milestone_id = key
 
     # determine undeleted issues on GitHub
     for key in github_issues:
