@@ -26,6 +26,15 @@ def export_issues_to_github(github_url, github_token, gitlab_issues, github_issu
         for key, val in milestones.items():
             if current_issue.milestone_title == val:
                 current_issue.milestone_id = key
+    # remove GitLab IDs, when no matching Milestone exists
+    # this will lead to not trying to add a milestone when calling the API
+    # also replace the title with the matching GitHub title, so it will not be updated,
+    # if no other value is different from each other
+    for current_issue in gitlab_issues.values():
+        if current_issue.milestone_title in missing_milestones:
+            current_issue.milestone_id = None
+            if current_issue.id in github_issues:
+                current_issue.milestone_title = github_issues[current_issue.id].milestone_title
 
     # determine undeleted issues on GitHub
     for key in github_issues:
