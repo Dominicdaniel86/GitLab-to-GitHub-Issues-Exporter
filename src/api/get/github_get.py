@@ -35,7 +35,7 @@ def read_github_issues(url, token):
                 assignees.append(current_assignee['login'])
 
             new_issue = Issue(id, title, "", labels, state, milestone, assignees)
-            issues[id] = new_issue
+            issues[int(id)] = new_issue
 
         print(f"debug: read {len(issues)} issues from GitHub API")
         return issues
