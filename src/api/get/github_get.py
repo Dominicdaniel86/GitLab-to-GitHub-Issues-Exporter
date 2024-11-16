@@ -26,15 +26,19 @@ def read_github_issues(url, token):
 
             state = current_issue['state']
 
-            milestone = None
+            milestone_title = None
             if current_issue['milestone'] is not None:
-                milestone = current_issue['milestone']['number']
+                milestone_title = current_issue['milestone']['title']
+
+            milestone_id = None
+            if current_issue['milestone'] is not None:
+                milestone_id = current_issue['milestone']['number']
 
             assignees = []
             for current_assignee in current_issue['assignees']:
                 assignees.append(current_assignee['login'])
 
-            new_issue = Issue(id, title, "", labels, state, milestone, assignees)
+            new_issue = Issue(id, title, "", labels, state, milestone_id, milestone_title, assignees)
             issues[int(id)] = new_issue
 
         print(f"debug: read {len(issues)} issues from GitHub API")
@@ -67,11 +71,62 @@ def check_if_github_issue_exists(url, issue_id, token):
 def read_comments():
     pass
 
-def read_labels():
-    pass
+def read_labels(url, token):
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    labels = []
+    try:
+        response = requests.get(f'{url}/labels',
+                                headers=headers)
+        if response.status_code != 200:
+            print(f"error: received unexpected error code while trying to retrieve GitHub labels - {response.status_code}")
+            return
+        
+        data = response.json()
+        for current_milestone in data:
+            labels.append(current_milestone['name'])
+        return labels
+    
+    except requests.exceptions.RequestException as e:
+        print(f"error: an error occured while trying to retrieve GitHub labels - {e}")
 
-def read_milestones():
-    pass
+def read_milestones(url, token):
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    milestones = {} # id: title
+    try:
+        response = requests.get(f'{url}/milestones',
+                                headers=headers)
+        if response.status_code != 200:
+            print(f"error: received unexpected error code while trying to retrieve GitHub milestones - {response.status_code}")
+            return
+        
+        data = response.json()
+        for current_milestone in data:
+            milestones[current_milestone['number']] = current_milestone['title']
+        return milestones
+    
+    except requests.exceptions.RequestException as e:
+        print(f"error: an error occured while trying to retrieve GitHub milestones - {e}")
 
-def read_asignees():
-    pass
+def read_collaborators(url, token):
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    collaborators = [] # name
+    try:
+        response = requests.get(f'{url}/collaborators',
+                                headers=headers)
+        if response.status_code != 200:
+            print(f"error: received unexpected error code while trying to retrieve GitHub collaborators - {response.status_code}")
+            return
+        
+        data = response.json()
+        for current_collaborators in data:
+            collaborators.append(current_collaborators['login'])
+        return collaborators
+    
+    except requests.exceptions.RequestException as e:
+        print(f"error: an error occured while trying to retrieve GitHub collaborators - {e}")
