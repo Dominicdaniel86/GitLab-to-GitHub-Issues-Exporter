@@ -28,8 +28,10 @@ def main():
     print(f"debug: max GitHub ID = {github_max_id}")
     print(f"debug: max hidden GitHub ID = {github_hidden_max_id}")
 
+    # check for not included assignee?
+
     # export issues to GitHub
-    modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels = \
+    modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels, missing_milestones, issues_with_missing_milestones = \
         export_issues_to_github(github_url, github_token, gitlab_issues, github_issues, gitlab_max_id, github_max_id, github_hidden_max_id)
     
     print(f"Updated {len(modified_issues)} issues: {modified_issues}")
@@ -37,6 +39,8 @@ def main():
     print(f"{len(undeleted_issues)} undeleted issues: {undeleted_issues}")
     print(f"Created {len(new_placeholders)} placeholders: {new_placeholders}")
     print(f"Created {len(new_labels)} new labels: {new_labels}")
+    print(f"{len(missing_milestones)} missing milestones: {missing_milestones}")
+    print(f"Issues with missing milestones: {issues_with_missing_milestones}")
 
 if __name__ == "__main__":
     main()
