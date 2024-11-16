@@ -111,5 +111,22 @@ def read_milestones(url, token):
     except requests.exceptions.RequestException as e:
         print(f"error: an error occured while trying to retrieve GitHub milestones - {e}")
 
-def read_asignees():
-    pass
+def read_collaborators(url, token):
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    collaborators = [] # name
+    try:
+        response = requests.get(f'{url}/collaborators',
+                                headers=headers)
+        if response.status_code != 200:
+            print(f"error: received unexpected error code while trying to retrieve GitHub collaborators - {response.status_code}")
+            return
+        
+        data = response.json()
+        for current_collaborators in data:
+            collaborators.append(current_collaborators['login'])
+        return collaborators
+    
+    except requests.exceptions.RequestException as e:
+        print(f"error: an error occured while trying to retrieve GitHub collaborators - {e}")

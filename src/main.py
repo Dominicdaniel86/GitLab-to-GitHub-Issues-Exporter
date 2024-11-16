@@ -29,6 +29,12 @@ def main():
     print(f"debug: max hidden GitHub ID = {github_hidden_max_id}")
 
     # check for not included assignee?
+    collaborators = github_get.read_collaborators(github_url, github_token)
+    for current_issue in gitlab_issues.values():
+        for current_assignee in current_issue.assignees:
+            if current_assignee not in collaborators:
+                print(f"error - {current_assignee} is not in GitHub collaborators")
+                return
 
     # export issues to GitHub
     modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels, missing_milestones, issues_with_missing_milestones = \
