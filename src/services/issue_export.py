@@ -12,6 +12,7 @@ def export_issues_to_github(github_url, github_token, gitlab_issues, github_issu
     new_placeholders = [] # {id}
     new_labels = [] # { name }
     missing_milestones = [] # { name }
+    issues_with_missing_milestones = [] # { id, title }
 
     # determine new labels
     labels = github_get.read_labels(github_url, github_token)
@@ -19,7 +20,7 @@ def export_issues_to_github(github_url, github_token, gitlab_issues, github_issu
 
     # determine missing milestones
     milestones = github_get.read_milestones(github_url, github_token)
-    missing_milestones = get_not_included_milestones(gitlab_issues, milestones)
+    missing_milestones, issues_with_missing_milestones = get_not_included_milestones(gitlab_issues, milestones)
 
     # replace GitLab Milestones with GitHub IDs
     for current_issue in gitlab_issues.values():
@@ -64,4 +65,4 @@ def export_issues_to_github(github_url, github_token, gitlab_issues, github_issu
                 update_github_issue(github_url, github_token, gitlab_issues[index])
     
     # return results
-    return modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels, missing_milestones
+    return modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels, missing_milestones, issues_with_missing_milestones

@@ -24,10 +24,11 @@ def get_not_included_labels(issues, existing_labels):
 
 def get_not_included_milestones(issues, existing_milestones):
     missing_milestones = []
+    issues_with_missing_milestones = []
 
     for current_issue in issues.values():
-        if current_issue.milestone_title not in existing_milestones.values() and current_issue.milestone_title not in missing_milestones:
+        if current_issue.milestone_title not in existing_milestones.values() and current_issue.milestone_title not in missing_milestones and current_issue.milestone_title != None:
             missing_milestones.append(current_issue.milestone_title)
+            issues_with_missing_milestones.append([current_issue.id, current_issue.title])
 
-    missing_milestones.remove(None)    
-    return missing_milestones
+    return missing_milestones, issues_with_missing_milestones
