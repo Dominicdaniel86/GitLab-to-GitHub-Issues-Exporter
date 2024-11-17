@@ -16,6 +16,7 @@ one_time_export: bool = False # doesn't add placeholders
 let_placeholders_be_closed: bool = True # does add placeholders as closed issues
 create_missing_labels: bool = True # creates missing labels
 import_assignees: str = "if_possible" # must either be "if_possible", "no" or "yes"
+placeholder_options = [let_placeholders_be_closed, create_missing_labels]
 
 # URLs for API requests
 gitlab_url = f'https://gitlab.com/api/v4/projects/{gitlab_project_id}'
@@ -46,7 +47,7 @@ def main():
 
     # export issues to GitHub
     modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels, missing_milestones, issues_with_missing_milestones = \
-        export_issues_to_github(github_url, github_token, gitlab_issues, github_issues, gitlab_max_id, github_max_id, github_hidden_max_id)
+        export_issues_to_github(github_url, github_token, gitlab_issues, github_issues, gitlab_max_id, github_max_id, github_hidden_max_id, placeholder_options)
     
     print(f"Updated {len(modified_issues)} issues: {modified_issues}")
     print(f"Created {len(new_issues)} new issues: {new_issues}")

@@ -3,7 +3,7 @@ from api.modify.github_modify import create_github_issue, update_github_issue
 from services.helper import get_not_included_labels, get_not_included_milestones
 
 
-def export_issues_to_github(github_url, github_token, gitlab_issues, github_issues, gitlab_max_id, github_max_id, github_hidden_max_id):
+def export_issues_to_github(github_url, github_token, gitlab_issues, github_issues, gitlab_max_id, github_max_id, github_hidden_max_id, placeholders_options):
     
     # needed lists
     modified_issues = [] # { id, title }
@@ -57,6 +57,8 @@ def export_issues_to_github(github_url, github_token, gitlab_issues, github_issu
         if index not in gitlab_issues:
             create_github_issue(github_url, github_token, {"title": "placeholder"})
             new_placeholders.append(index)
+            if placeholders_options[0] == True:
+                update_github_issue(github_url, github_token, {"id": index, "title": "placeholder", "state": "closed"})
         else:
             create_github_issue(github_url, github_token, gitlab_issues[index])
             new_issues.append([index, gitlab_issues[index].title])
