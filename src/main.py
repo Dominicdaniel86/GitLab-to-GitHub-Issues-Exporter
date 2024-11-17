@@ -1,4 +1,5 @@
 from api.get import github_get, gitlab_get
+from services.filter_issues import filter_all_options, filter_assingees, filter_labels
 from services.helper import get_hidden_github_issue_id
 from services.issue_export import export_issues_to_github
 
@@ -8,9 +9,16 @@ github_token: str = "ghp_CODE"
 gitlab_project_id: str = "12345"
 github_repo_owner: str = "MaxMustermann"
 github_project_name: str = "Test"
-number_of_issues: int = 10
-import_assignees: bool = False
+number_of_issues: int = 10 # temporary
 
+# customization
+migrate_options = ["labels", "milestones", "assignees", "description"] # can include "labels", "milestones", "assignees", "description"
+
+one_time_export: bool = False # doesn't add placeholders
+let_placeholders_be_closed: bool = True # does add placeholders as closed issues
+create_missing_labels: bool = True # creates missing labels
+import_assignees: str = "if_possible" # must either be "if_possible", "no" or "yes"
+placeholder_options = [let_placeholders_be_closed, create_missing_labels]
 
 # URLs for API requests
 gitlab_url = f'https://gitlab.com/api/v4/projects/{gitlab_project_id}'
@@ -28,17 +36,22 @@ def main():
     print(f"debug: max GitHub ID = {github_max_id}")
     print(f"debug: max hidden GitHub ID = {github_hidden_max_id}")
 
-    # check for not included assignee?
-    collaborators = github_get.read_collaborators(github_url, github_token)
-    for current_issue in gitlab_issues.values():
-        for current_assignee in current_issue.assignees:
-            if current_assignee not in collaborators:
-                print(f"error - {current_assignee} is not in GitHub collaborators")
-                return
+    filter_all_options(gitlab_issues, github_issues, migrate_options)
+
+    # filter for (not) included assignees
+    try:
+        filter_assingees(github_url, github_token, gitlab_issues, import_assignees)
+    except ValueError as e:
+        print(f"error - {e}")
+        return
+
+    # filter for (not) included labels
+    if create_missing_labels == False:
+        filter_labels(github_url, github_token, gitlab_issues)
 
     # export issues to GitHub
     modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels, missing_milestones, issues_with_missing_milestones = \
-        export_issues_to_github(github_url, github_token, gitlab_issues, github_issues, gitlab_max_id, github_max_id, github_hidden_max_id)
+        export_issues_to_github(github_url, github_token, gitlab_issues, github_issues, gitlab_max_id, github_max_id, github_hidden_max_id, placeholder_options)
     
     print(f"Updated {len(modified_issues)} issues: {modified_issues}")
     print(f"Created {len(new_issues)} new issues: {new_issues}")
