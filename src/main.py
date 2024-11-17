@@ -42,7 +42,7 @@ def main():
 
     # filter for (not) included labels
     if create_missing_labels == False:
-        filter_labels()
+        filter_labels(github_url, github_token, gitlab_issues)
 
     # export issues to GitHub
     modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels, missing_milestones, issues_with_missing_milestones = \

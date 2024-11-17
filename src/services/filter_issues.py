@@ -23,5 +23,13 @@ def filter_assingees(github_url, github_token, gitlab_issues, import_assignees):
                 # might be best to implement a class "AssigneeError"
         current_issue.assignees = filtered_assignees
 
-def filter_labels():
-    pass
+def filter_labels(github_url, github_token, gitlab_issues):
+
+    issues = github_get.read_labels(github_url, github_token)
+
+    for current_issue in gitlab_issues.values():
+        filtered_labels = []
+        for current_label in current_issue.labels:
+            if current_label in issues:
+                filtered_labels.append(current_label)
+        current_issue.labels = filtered_labels
