@@ -1,5 +1,5 @@
 from api.get import github_get, gitlab_get
-from services.filter_issues import filter_assingees, filter_labels
+from services.filter_issues import filter_all_options, filter_assingees, filter_labels
 from services.helper import get_hidden_github_issue_id
 from services.issue_export import export_issues_to_github
 
@@ -12,6 +12,8 @@ github_project_name: str = "Test"
 number_of_issues: int = 10 # temporary
 
 # customization
+migrate_options = ["labels", "milestones", "assignees", "description"] # can include "labels", "milestones", "assignees", "description"
+
 one_time_export: bool = False # doesn't add placeholders
 let_placeholders_be_closed: bool = True # does add placeholders as closed issues
 create_missing_labels: bool = True # creates missing labels
@@ -33,6 +35,8 @@ def main():
     print(f"debug: max GitLab ID = {gitlab_max_id}")
     print(f"debug: max GitHub ID = {github_max_id}")
     print(f"debug: max hidden GitHub ID = {github_hidden_max_id}")
+
+    filter_all_options(gitlab_issues, github_issues, migrate_options)
 
     # filter for (not) included assignees
     try:

@@ -1,6 +1,23 @@
 from api.get import github_get
 
 
+def filter_all_options(gitlab_issues, github_issues, migrate_options):
+    # filter labels
+    if "labels" not in migrate_options:
+        for single_issue in gitlab_issues.values():
+            single_issue.labels = github_issues[single_issue.id].labels
+
+    # filter milestones
+    if "milestones" not in migrate_options:
+        for single_issue in gitlab_issues.values():
+            single_issue.milestone_title = github_issues[single_issue.id].milestone_title
+
+    # fiter assignees
+    if "assignees" not in migrate_options:
+        for single_issue in gitlab_issues.values():
+            single_issue.assignees = github_issues[single_issue.id].assignees
+
+
 def filter_assingees(github_url, github_token, gitlab_issues, import_assignees):
     # if "no": remove all asssignees
     if import_assignees == "no":
