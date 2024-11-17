@@ -8,9 +8,13 @@ github_token: str = "ghp_CODE"
 gitlab_project_id: str = "12345"
 github_repo_owner: str = "MaxMustermann"
 github_project_name: str = "Test"
-number_of_issues: int = 10
-import_assignees: bool = False
+number_of_issues: int = 10 # temporary
 
+# customization
+one_time_export: bool = False # doesn't add placeholders
+let_placeholders_be_closed: bool = True # does add placeholders as closed issues
+create_missing_labels: bool = True # creates missing labels
+import_assignees: str = "if_possible" # must either be "if_possible", "no" or "yes"
 
 # URLs for API requests
 gitlab_url = f'https://gitlab.com/api/v4/projects/{gitlab_project_id}'
