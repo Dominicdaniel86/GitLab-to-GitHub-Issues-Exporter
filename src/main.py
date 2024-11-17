@@ -1,4 +1,5 @@
 from api.get import github_get, gitlab_get
+from services.filter_issues import filter_assingees, filter_labels
 from services.helper import get_hidden_github_issue_id
 from services.issue_export import export_issues_to_github
 
@@ -32,13 +33,16 @@ def main():
     print(f"debug: max GitHub ID = {github_max_id}")
     print(f"debug: max hidden GitHub ID = {github_hidden_max_id}")
 
-    # check for not included assignee?
-    collaborators = github_get.read_collaborators(github_url, github_token)
-    for current_issue in gitlab_issues.values():
-        for current_assignee in current_issue.assignees:
-            if current_assignee not in collaborators:
-                print(f"error - {current_assignee} is not in GitHub collaborators")
-                return
+    # filter for (not) included assignees
+    try:
+        filter_assingees(github_url, github_token, gitlab_issues, import_assignees)
+    except ValueError as e:
+        print(f"error - {e}")
+        return
+
+    # filter for (not) included labels
+    if create_missing_labels == False:
+        filter_labels()
 
     # export issues to GitHub
     modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels, missing_milestones, issues_with_missing_milestones = \
