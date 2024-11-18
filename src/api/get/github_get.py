@@ -19,7 +19,9 @@ def read_github_issues(url, token):
         for current_issue in data:
             id = int(current_issue['number'])
             title = current_issue['title']
-            # description
+            description = current_issue['body']
+            if description == None:
+                description = ""
             labels = []
             for current_label in current_issue['labels']:
                 labels.append(current_label['name'])
@@ -37,8 +39,10 @@ def read_github_issues(url, token):
             assignees = []
             for current_assignee in current_issue['assignees']:
                 assignees.append(current_assignee['login'])
+            
+            comments = current_issue['comments']
 
-            new_issue = Issue(id, title, "", labels, state, milestone_id, milestone_title, assignees)
+            new_issue = Issue(id, title, description, labels, state, milestone_id, milestone_title, assignees, comments)
             issues[int(id)] = new_issue
 
         print(f"debug: read {len(issues)} issues from GitHub API")
@@ -68,8 +72,25 @@ def check_if_github_issue_exists(url, issue_id, token):
         print(f"error: an error occured while trying to check if GitHub issue exists - {e}")
 
 
-def read_comments():
-    pass
+def read_comments(url, token, issue_id):
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    comments = []
+    try:
+        response = requests.get(f'{url}/issues/{issue_id}/comments',
+                                headers=headers)
+        if response.status_code != 200:
+            print(f"error: received unexpected error code while trying to retrieve GitHub issues - {response.status_code}")
+            return
+
+        data = response.json()
+        for current_comment in data:
+            comments.append([current_comment['body'], current_comment['id']])
+        return comments
+    
+    except requests.exceptions.RequestException as e:
+        print(f"error: an error occured while trying to retrieve GitHub comments - {e}")
 
 def read_labels(url, token):
     headers = {

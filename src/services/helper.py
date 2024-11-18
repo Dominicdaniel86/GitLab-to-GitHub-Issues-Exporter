@@ -32,3 +32,12 @@ def get_not_included_milestones(issues, existing_milestones):
             issues_with_missing_milestones.append([current_issue.id, current_issue.title])
 
     return missing_milestones, issues_with_missing_milestones
+
+# returns True and index or False and 0
+def contains_comment(single_comment, dictionary_entry):
+    index = 0
+    for sublist in dictionary_entry:
+        if single_comment in sublist[0]:
+            return True, index
+        index += 1
+    return False, 0
