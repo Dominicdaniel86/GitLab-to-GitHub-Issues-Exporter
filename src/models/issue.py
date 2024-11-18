@@ -25,7 +25,7 @@ class Issue:
 
         return (self.id == other.id and
                 self.title == other.title and
-                # self.description == other.description and
+                self.description == other.description and
                 sorted(self.labels) == sorted(other.labels) and
                 self.state == other.state and
                 self.milestone_title == other.milestone_title and
@@ -34,7 +34,7 @@ class Issue:
     def to_create_dict(self):
         return {
             'title': self.title,
-            # 'body': self.description,
+            'body': self.description,
             'labels': self.labels,
             'milestone': self.milestone_id,
             'assignees': self.assignees
@@ -44,7 +44,7 @@ class Issue:
         return {
             'id': self.id,
             'title': self.title,
-            # 'body': self.description,
+            'body': self.description,
             'labels': self.labels,
             'state': self.state,
             'milestone': self.milestone_id,
