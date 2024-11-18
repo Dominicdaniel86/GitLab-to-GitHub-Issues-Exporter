@@ -10,6 +10,10 @@ Issues:
 
 - ID and Title are always exported
 
+Description:
+
+- Export feature for the description can be toggled on or off
+
 Labels:
 
 - Export feature for labels can be toggled on or off
@@ -26,10 +30,10 @@ Assignees:
 - Assignees must have the same username on both platforms and be a contributer to both projects
 - Missing assignees are not exported. Choose whether this results in an export failure or if they are simply ignored
 
-Description:
+Comments:
 
-- Export feature for the description can be toggled on or off
-- On GitHub, descriptions are added as comments. Choose to either add a new comment with the updated description or if existing comments will be overwritten by a new one
+- Export feature for comments can be toggled on or off
+- Optionally, choose to only add missing comments to GitHub or also delete comments, which could not have been found on GitLab
 
 ## Technical Considerations
 
@@ -47,6 +51,10 @@ The script can automatically create missing labels but might not exactly replica
 ### Assignee Matching
 
 Assignees must have identical usernames across both platforms and be added as contributors to be correcly exported.
+
+### Comments
+
+As threads only exist on GitLab, comments to opened threads will only be added as independent comments on GitHub.
 
 ## Usage and Configuration
 
@@ -71,6 +79,7 @@ Currently planned future updates:
 
 - Option to export all labels and milestones from a GitLab project to the GitHub project
 - Enhanced robustness with additional safety checks
+- Implementing a better way to represent exported threads on GitHub
 - A user-friendly interface, using Tkinter
 - Providing a standalone installation that eliminates the need for a installed Python interpreter
 - Exporting issues from GitHub to GitLab (in the distant future)
