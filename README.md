@@ -54,7 +54,7 @@ Assignees must have identical usernames across both platforms and be added as co
 
 ### Comments
 
-As threads only exist on GitLab, comments to opened threads will only be added as independent comments on GitHub.
+The user associated with the token is solely responsible for creating, deleting, or editing a comment. It's impossible to attribute these actions to anyone else but the actual creator. Additionally, since thread functionality is unique to GitLab, any comments made on threads in GitLab will appear as standalone comments on GitHub.
 
 ## Usage and Configuration
 
