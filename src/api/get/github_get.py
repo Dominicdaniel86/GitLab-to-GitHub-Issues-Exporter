@@ -68,8 +68,24 @@ def check_if_github_issue_exists(url, issue_id, token):
         print(f"error: an error occured while trying to check if GitHub issue exists - {e}")
 
 
-def read_comments():
-    pass
+def read_comments(url, token, id):
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    comments = []
+    try:
+        response = requests.get(f'{url}/issues/{id}/comments',
+                                headers=headers)
+        if response.status_code != 200:
+            print(f"error: received unexpected error code while trying to retrieve GitHub issues - {response.status_code}")
+            return
+
+        data = response.json()
+        for current_comment in data:
+            comments.append([current_comment['body'], current_comment['id']])
+    
+    except requests.exceptions.RequestException as e:
+        print(f"error: an error occured while trying to retrieve GitHub comments - {e}")
 
 def read_labels(url, token):
     headers = {
