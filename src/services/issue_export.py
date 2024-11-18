@@ -69,29 +69,42 @@ def export_issues_to_github(github_url, github_token, gitlab_issues, github_issu
     # return results
     return modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels, missing_milestones, issues_with_missing_milestones
 
+
+# still has some minor bugs if the comment is very simliar (e.g. like a and aaa)
 def export_comments_to_github(github_url, github_token, gitlab_comments, github_comments, delete_missing_comments):
-    updated_comments = []
-    deleted_comments = []    
+    updated_comments = [0, []]
+    deleted_comments = [0, []]    
     
     # add missing comments
     for key in gitlab_comments.keys():
         if key not in github_comments: # then create all comments
             for current_comment in gitlab_comments[key]:
                 create_github_comment(github_url, github_token, key, current_comment[0])
+                updated_comments[0] += 1
+                if key not in updated_comments[1]:
+                    updated_comments[1].append(int(key))
 
         else:
             while(len(gitlab_comments[key]) != 0):
                 contained, index = contains_comment(gitlab_comments[key][0][0], github_comments[key])
                 if not contained:
                     create_github_comment(github_url, github_token, key, gitlab_comments[key][0][0])
+                    updated_comments[0] += 1
+                    if key not in updated_comments[1]:
+                        updated_comments[1].append(int(key))
                     gitlab_comments[key].pop(0)
                 else:
                     gitlab_comments[key].pop(0)
                     github_comments[key].pop(index)
             
-            if delete_missing_comments:
-                for reamining_comment in github_comments[key]:
-                    delete_github_comment(github_url, github_token, reamining_comment[1])
+    if delete_missing_comments:
+        for key, remaining_comments in github_comments.items():
+            while(len(remaining_comments) != 0):
+                delete_github_comment(github_url, github_token, remaining_comments[0][1])
+                deleted_comments[0] += 1
+                if key not in deleted_comments[1]:
+                    deleted_comments[1].append(int(key))
+                remaining_comments.pop(0)
 
     return updated_comments, deleted_comments
     
