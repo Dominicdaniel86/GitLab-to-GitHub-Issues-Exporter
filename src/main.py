@@ -40,15 +40,17 @@ def main():
     github_comments = {}
     if "comments" in migrate_options:
         for current_issue in github_issues.values():
-            comments = github_get.read_comments(github_url, github_token, current_issue.id)
-            github_comments[current_issue.id] = comments
+            if current_issue.comments != 0:
+                comments = github_get.read_comments(github_url, github_token, current_issue.id)
+                github_comments[current_issue.id] = comments
 
     # read GitLab comments
     gitlab_comments = {}
     if "comments" in migrate_options:
         for current_issue in gitlab_issues.values():
-            comments = gitlab_get.read_comments(gitlab_url, gitlab_token, current_issue.id)
-            gitlab_comments[current_issue.id] = comments
+            if current_issue.comments != 0:
+                comments = gitlab_get.read_comments(gitlab_url, gitlab_token, current_issue.id)
+                gitlab_comments[current_issue.id] = comments
 
     filter_all_options(gitlab_issues, github_issues, migrate_options)
 
@@ -66,6 +68,8 @@ def main():
     # export issues to GitHub
     modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels, missing_milestones, issues_with_missing_milestones = \
         export_issues_to_github(github_url, github_token, gitlab_issues, github_issues, gitlab_max_id, github_max_id, github_hidden_max_id, placeholder_options)
+    
+    # export comments go GitHub
     
     print(f"Updated {len(modified_issues)} issues: {modified_issues}")
     print(f"Created {len(new_issues)} new issues: {new_issues}")

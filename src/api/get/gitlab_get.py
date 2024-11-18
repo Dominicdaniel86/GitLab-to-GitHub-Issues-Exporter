@@ -38,8 +38,10 @@ def read_gitlab_issues(url, token):
             assignees = []
             for current_assignee in current_issue['assignees']:
                 assignees.append(current_assignee['username'])
+            
+            comments = current_issue['user_notes_count']
 
-            new_issue = Issue(id, title, description, labels, state, milestone_id, milestone_title, assignees)
+            new_issue = Issue(id, title, description, labels, state, milestone_id, milestone_title, assignees, comments)
             issues[int(id)] = new_issue
         
         print(f"debug: read {len(issues)} issues from GitLab API")

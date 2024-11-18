@@ -68,3 +68,6 @@ def export_issues_to_github(github_url, github_token, gitlab_issues, github_issu
     
     # return results
     return modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels, missing_milestones, issues_with_missing_milestones
+
+def export_comments_to_github(github_url, github_token, gitlab_comments, github_comments):
+    pass
