@@ -20,7 +20,7 @@ def filter_all_options(gitlab_issues, github_issues, migrate_options):
     # filter description
     if "description" not in migrate_options:
         for single_issue in gitlab_issues.values():
-            single_issue.description = gitlab_issues[single_issue.id].description
+            single_issue.description = github_issues[single_issue.id].description
 
 
 def filter_assingees(github_url, github_token, gitlab_issues, import_assignees):
