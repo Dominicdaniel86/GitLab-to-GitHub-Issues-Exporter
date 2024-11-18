@@ -12,7 +12,7 @@ github_project_name: str = "Test"
 number_of_issues: int = 10 # temporary
 
 # customization
-migrate_options = ["labels", "milestones", "assignees", "description"] # can include "labels", "milestones", "assignees", "description"
+migrate_options = ["labels", "milestones", "assignees", "description", "comments"] # can include "labels", "milestones", "assignees", "description" and "comments"
 
 one_time_export: bool = False # doesn't add placeholders
 let_placeholders_be_closed: bool = True # does add placeholders as closed issues
@@ -35,6 +35,20 @@ def main():
     print(f"debug: max GitLab ID = {gitlab_max_id}")
     print(f"debug: max GitHub ID = {github_max_id}")
     print(f"debug: max hidden GitHub ID = {github_hidden_max_id}")
+
+    # read GitHub comments
+    github_comments = {}
+    if "comments" in migrate_options:
+        for current_issue in github_issues.values():
+            comments = github_get.read_comments(github_url, github_token, current_issue.id)
+            github_comments[current_issue.id] = comments
+
+    # read GitLab comments
+    gitlab_comments = {}
+    if "comments" in migrate_options:
+        for current_issue in gitlab_issues.values():
+            comments = gitlab_get.read_comments(gitlab_url, gitlab_token, current_issue.id)
+            gitlab_comments[current_issue.id] = comments
 
     filter_all_options(gitlab_issues, github_issues, migrate_options)
 
