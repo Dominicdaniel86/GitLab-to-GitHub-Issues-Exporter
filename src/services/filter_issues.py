@@ -1,3 +1,4 @@
+import os
 from api.get import github_get
 
 
@@ -23,14 +24,14 @@ def filter_all_options(gitlab_issues, github_issues, migrate_options):
             single_issue.description = github_issues[single_issue.id].description
 
 
-def filter_assingees(github_url, github_token, gitlab_issues, import_assignees):
+def filter_assingees(github_url, gitlab_issues, import_assignees):
     # if "no": remove all asssignees
     if import_assignees == "no":
         for current_issue in gitlab_issues.values():
             current_issue.assignees = []
         return
 
-    collaborators = github_get.read_collaborators(github_url, github_token)
+    collaborators = github_get.read_collaborators(github_url)
 
     for current_issue in gitlab_issues.values():
         filtered_assignees = []
@@ -45,9 +46,9 @@ def filter_assingees(github_url, github_token, gitlab_issues, import_assignees):
                 # might be best to implement a class "AssigneeError"
         current_issue.assignees = filtered_assignees
 
-def filter_labels(github_url, github_token, gitlab_issues):
+def filter_labels(github_url, gitlab_issues):
 
-    issues = github_get.read_labels(github_url, github_token)
+    issues = github_get.read_labels(github_url)
 
     for current_issue in gitlab_issues.values():
         filtered_labels = []
