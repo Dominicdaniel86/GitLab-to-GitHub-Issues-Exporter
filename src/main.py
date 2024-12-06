@@ -91,5 +91,7 @@ def main():
     print(f"Added {updated_comments[0]} comments for issues {updated_comments[1]}")
     print(f"Deleted {deleted_comments[0]} comments for issues {deleted_comments[1]}")
 
+    input("Please enter to exit...")
+
 if __name__ == "__main__":
     main()

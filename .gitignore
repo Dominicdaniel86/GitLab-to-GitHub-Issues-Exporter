@@ -4,3 +4,6 @@
 *env
 *log
 *txt
+/build
+/dist
+/main.spec
