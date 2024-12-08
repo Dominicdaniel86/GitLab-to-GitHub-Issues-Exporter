@@ -5,18 +5,22 @@ from services.filter_issues import filter_all_options, filter_assingees, filter_
 from services.helper import get_hidden_github_issue_id
 from services.issue_export import export_comments_to_github, export_issues_to_github
 
-# adjust the following parameters:
-number_of_issues: int = 10 # temporary
-
 # customization
 migrate_options = ["labels", "milestones", "assignees", "description", "comments"] # can include "labels", "milestones", "assignees", "description" and "comments"
 
-one_time_export: bool = False # doesn't add placeholders
+# customization - placeholders
 let_placeholders_be_closed: bool = True # does add placeholders as closed issues
+
+# customization - labels
 create_missing_labels: bool = True # creates missing labels
+
+# customization - assignees
 import_assignees: str = "if_possible" # must either be "if_possible", "no" or "yes"
-placeholder_options = [let_placeholders_be_closed, create_missing_labels]
+
+# customization - comments
 delete_missing_comments = True # deletes all comments that are not found on GitLab
+
+placeholder_options = [let_placeholders_be_closed, create_missing_labels]
 
 # URLs for API requests
 gitlab_url = f'https://gitlab.com/api/v4/projects/{os.getenv("GITLAB_PROJECT_ID")}'
