@@ -1,6 +1,6 @@
 # Deploy Test Repository
 
-This directory contains files, that aim to create a GitLab and GitHub test repository.
+This directory contains files, that aim to create issues in a GitLab and GitHub test repository. This allows to use those two repos to test the main application.
 
 ## Repositories Layout
 
@@ -37,12 +37,15 @@ Issue 7 (Deleted)
 
 ## Usage
 
-1. Create a "authorization.env" file in this directory.
-2. Fill out following variables in that file:
+1. Create a new GitLab repository
+2. Create a new GitHub repository
+3. Adjust the created issues in the scripts as needed.
+4. Create a "authorization.env" file in this directory.
+5. Fill out following variables in that file:
   GITLAB_PROJECT_ID
   GITLAB_TOKEN
   GITHUB_REPO_NAME
   GITHUB_REPO_OWNER
   GITHUB_TOKEN
-3. Execute *create_gitlab_test_repo.py*
-4. Execute *create_github_test_repo.py*
+6. Execute *create_gitlab_test_repo.py*
+7. Execute *create_github_test_repo.py*
