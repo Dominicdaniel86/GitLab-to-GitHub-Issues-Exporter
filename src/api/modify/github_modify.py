@@ -1,9 +1,10 @@
+import os
 import requests
 
 
-def create_github_issue(url, token, issue):
+def create_github_issue(url, issue):
     headers = {
-        'Authorization': f'Bearer {token}',
+        'Authorization': f'Bearer {os.getenv("GITHUB_TOKEN")}',
         'accept': 'application/vnd.github+json'
     }
     if not isinstance(issue, dict):
@@ -24,9 +25,9 @@ def create_github_issue(url, token, issue):
         print(f"error: an error occured while trying to create a GitHub issue - {e}")
 
 
-def update_github_issue(url, token, issue):
+def update_github_issue(url, issue):
     headers = {
-        'Authorization': f'Bearer {token}',
+        'Authorization': f'Bearer {os.getenv("GITHUB_TOKEN")}',
         'accept': 'application/vnd.github+json'
     }
     if not isinstance(issue, dict):
@@ -45,9 +46,9 @@ def update_github_issue(url, token, issue):
     except requests.exceptions.RequestException as e:
         print(f"error: an error occured while trying to update a GitHub issue - {e}")
 
-def create_github_comment(url, token, issue_id, body):
+def create_github_comment(url, issue_id, body):
     headers = {
-        'Authorization': f'Bearer {token}',
+        'Authorization': f'Bearer {os.getenv("GITHUB_TOKEN")}',
         'accept': 'application/vnd.github+json'
     }
     json_body = {
@@ -67,9 +68,9 @@ def create_github_comment(url, token, issue_id, body):
     except requests.exceptions.RequestException as e:
         print(f"error: an error occured while trying to update a GitHub issue - {e}")
 
-def delete_github_comment(url, token, comment_id):
+def delete_github_comment(url, comment_id):
     headers = {
-        'Authorization': f'Bearer {token}',
+        'Authorization': f'Bearer {os.getenv("GITHUB_TOKEN")}',
         'accept': 'application/vnd.github+json'
     }
 

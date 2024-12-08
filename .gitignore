@@ -1,4 +1,9 @@
 /venv
-/environment_variables.txt
 **/__pycache__
 /documents
+*env
+*log
+*txt
+/build
+/dist
+/main.spec

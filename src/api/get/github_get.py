@@ -1,12 +1,13 @@
+import os
 import requests
 
 from models.issue import Issue
 
 
-def read_github_issues(url, token):
+def read_github_issues(url):
     issues = {}
     headers = {
-        'Authorization': f'Bearer {token}'
+        'Authorization': f'Bearer {os.getenv("GITHUB_TOKEN")}'
     }
     try:
         response = requests.get(f"{url}/issues?state=all",
@@ -52,9 +53,9 @@ def read_github_issues(url, token):
         print(f"error: an error occured while trying to retrieve GitHub issues - {e}")
 
 
-def check_if_github_issue_exists(url, issue_id, token):
+def check_if_github_issue_exists(url, issue_id):
     headers = {
-        'Authorization': f'Bearer {token}'
+        'Authorization': f'Bearer {os.getenv("GITHUB_TOKEN")}'
     }
     try:
         response = requests.get(f'{url}/issues/{issue_id}',
@@ -72,9 +73,9 @@ def check_if_github_issue_exists(url, issue_id, token):
         print(f"error: an error occured while trying to check if GitHub issue exists - {e}")
 
 
-def read_comments(url, token, issue_id):
+def read_comments(url, issue_id):
     headers = {
-        'Authorization': f'Bearer {token}'
+        'Authorization': f'Bearer {os.getenv("GITHUB_TOKEN")}'
     }
     comments = []
     try:
@@ -92,9 +93,9 @@ def read_comments(url, token, issue_id):
     except requests.exceptions.RequestException as e:
         print(f"error: an error occured while trying to retrieve GitHub comments - {e}")
 
-def read_labels(url, token):
+def read_labels(url):
     headers = {
-        'Authorization': f'Bearer {token}'
+        'Authorization': f'Bearer {os.getenv("GITHUB_TOKEN")}'
     }
     labels = []
     try:
@@ -112,9 +113,9 @@ def read_labels(url, token):
     except requests.exceptions.RequestException as e:
         print(f"error: an error occured while trying to retrieve GitHub labels - {e}")
 
-def read_milestones(url, token):
+def read_milestones(url):
     headers = {
-        'Authorization': f'Bearer {token}'
+        'Authorization': f'Bearer {os.getenv("GITHUB_TOKEN")}'
     }
     milestones = {} # id: title
     try:
@@ -132,9 +133,9 @@ def read_milestones(url, token):
     except requests.exceptions.RequestException as e:
         print(f"error: an error occured while trying to retrieve GitHub milestones - {e}")
 
-def read_collaborators(url, token):
+def read_collaborators(url):
     headers = {
-        'Authorization': f'Bearer {token}'
+        'Authorization': f'Bearer {os.getenv("GITHUB_TOKEN")}'
     }
     collaborators = [] # name
     try:

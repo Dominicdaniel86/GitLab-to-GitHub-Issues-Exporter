@@ -1,12 +1,13 @@
+import os
 import requests
 
 from models.issue import Issue
 
 
-def read_gitlab_issues(url, token):
+def read_gitlab_issues(url):
     issues = {}
     headers = {
-        'PRIVATE-TOKEN': f'{token}'
+        'PRIVATE-TOKEN': f'{os.getenv("GITLAB_TOKEN")}'
     }
     try:
         response = requests.get(f'{url}/issues',
@@ -50,9 +51,9 @@ def read_gitlab_issues(url, token):
     except requests.exceptions.RequestException as e:
         print(f"error: an error occured while trying to retrieve GitLab issues - {e}")
 
-def read_comments(url, token, issue_id):
+def read_comments(url, issue_id):
     headers = {
-        'PRIVATE-TOKEN': f'{token}'
+        'PRIVATE-TOKEN': f'{os.getenv("GITLAB_TOKEN")}'
     }
     comments = []
     try:
