@@ -1,18 +1,19 @@
 import os
 from dotenv import load_dotenv
 from api.get import github_get, gitlab_get
-from services.filter_issues import filter_all_options, filter_assingees, filter_labels
+from services.filter_issues import filter_all_options, filter_assingees, filter_labels, filter_pipeline
 from services.helper import get_hidden_github_issue_id
 from services.issue_export import export_comments_to_github, export_issues_to_github
 
+# updated customization
+migrate_labels: bool = True
+create_missing_labels: bool = True
+
 # customization
-migrate_options = ["labels", "milestones", "assignees", "description", "comments"] # can include "labels", "milestones", "assignees", "description" and "comments"
+migrate_options = ["milestones", "assignees", "description", "comments"] # can include "milestones", "assignees", "description" and "comments"
 
 # customization - placeholders
 let_placeholders_be_closed: bool = True # does add placeholders as closed issues
-
-# customization - labels
-create_missing_labels: bool = True # creates missing labels
 
 # customization - assignees
 import_assignees: str = "if_possible" # must either be "if_possible", "no" or "yes"
@@ -29,6 +30,7 @@ github_url = f"https://api.github.com/repos/{os.getenv("GITHUB_REPO_OWNER")}/{os
 def main():
     load_dotenv("github_issue_exporter.env")
 
+    # read issues and max IDs
     gitlab_issues = gitlab_get.read_gitlab_issues(gitlab_url)
     gitlab_max_id = max(gitlab_issues.keys())
     
@@ -55,19 +57,9 @@ def main():
             if current_issue.comments != 0:
                 comments = gitlab_get.read_comments(gitlab_url, current_issue.id)
                 gitlab_comments[current_issue.id] = comments
-
-    filter_all_options(gitlab_issues, github_issues, migrate_options)
-
-    # filter for (not) included assignees
-    try:
-        filter_assingees(github_url, gitlab_issues, import_assignees)
-    except ValueError as e:
-        print(f"error - {e}")
-        return
-
-    # filter for (not) included labels
-    if create_missing_labels == False:
-        filter_labels(github_url, gitlab_issues)
+    
+    # filter
+    filter_pipeline(github_url, gitlab_issues, github_issues, migrate_options, migrate_labels, import_assignees, create_missing_labels)
 
     # export issues to GitHub
     modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels, missing_milestones, issues_with_missing_milestones = \

@@ -2,9 +2,21 @@ import os
 from api.get import github_get
 
 
-def filter_all_options(gitlab_issues, github_issues, migrate_options):
+def filter_pipeline(github_url, gitlab_issues, github_issues, migrate_options, migrate_labels, import_assignees, create_missing_labels):
+    filter_all_options(gitlab_issues, github_issues, migrate_options, migrate_labels)
+    # filter for (not) included assignees
+    try:
+        filter_assingees(github_url, gitlab_issues, import_assignees)
+    except ValueError as e:
+        print(f"error - {e}")
+        return
+    # filter for (not) included labels
+    if create_missing_labels == False:
+        filter_labels(github_url, gitlab_issues)
+
+def filter_all_options(gitlab_issues, github_issues, migrate_options, migrate_labels):
     # filter labels
-    if "labels" not in migrate_options:
+    if not migrate_labels:
         for single_issue in gitlab_issues.values():
             single_issue.labels = github_issues[single_issue.id].labels
 
