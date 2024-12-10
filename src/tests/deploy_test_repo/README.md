@@ -49,3 +49,4 @@ Issue 7 (Deleted)
   GITHUB_TOKEN
 6. Execute *create_gitlab_test_repo.py*
 7. Execute *create_github_test_repo.py*
+8. Delete the issues that should already have been deleted.
