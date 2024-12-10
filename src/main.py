@@ -5,23 +5,26 @@ from services.filter_issues import filter_all_options, filter_assingees, filter_
 from services.helper import get_hidden_github_issue_id
 from services.issue_export import export_comments_to_github, export_issues_to_github
 
-# updated customization
-migrate_labels: bool = True
-create_missing_labels: bool = True
-
-# customization
-migrate_options = ["milestones", "assignees", "description", "comments"] # can include "milestones", "assignees", "description" and "comments"
-
 # customization - placeholders
 let_placeholders_be_closed: bool = True # does add placeholders as closed issues
 
-# customization - assignees
-import_assignees: str = "if_possible" # must either be "if_possible", "no" or "yes"
+# customization - description
+migrate_description: bool = True
+
+# customization - labels
+migrate_labels: bool = True
+create_missing_labels: bool = True
+
+# customization - milestones
+migrate_milestones: bool = True
+
+# cusomization - assignees
+migrate_assignees: bool = True
+missing_assignee_stops_migration: bool = True
 
 # customization - comments
-delete_missing_comments = True # deletes all comments that are not found on GitLab
-
-placeholder_options = [let_placeholders_be_closed, create_missing_labels]
+migrate_comments: bool = True
+delete_missing_comments: bool = True # deletes all comments that are not found on GitLab
 
 # URLs for API requests
 gitlab_url = f'https://gitlab.com/api/v4/projects/{os.getenv("GITLAB_PROJECT_ID")}'
@@ -44,7 +47,7 @@ def main():
 
     # read GitHub comments
     github_comments = {}
-    if "comments" in migrate_options:
+    if migrate_comments:
         for current_issue in github_issues.values():
             if current_issue.comments != 0:
                 comments = github_get.read_comments(github_url, current_issue.id)
@@ -52,25 +55,25 @@ def main():
 
     # read GitLab comments
     gitlab_comments = {}
-    if "comments" in migrate_options:
+    if migrate_comments:
         for current_issue in gitlab_issues.values():
             if current_issue.comments != 0:
                 comments = gitlab_get.read_comments(gitlab_url, current_issue.id)
                 gitlab_comments[current_issue.id] = comments
     
     # filter
-    filter_pipeline(github_url, gitlab_issues, github_issues, migrate_options, migrate_labels, import_assignees, create_missing_labels)
+    filter_pipeline(github_url, gitlab_issues, github_issues, migrate_labels, migrate_assignees, create_missing_labels, migrate_milestones)
 
     # export issues to GitHub
     modified_issues, new_issues, undeleted_issues, new_placeholders, new_labels, missing_milestones, issues_with_missing_milestones = \
-        export_issues_to_github(github_url, gitlab_issues, github_issues, gitlab_max_id, github_max_id, github_hidden_max_id, placeholder_options)
+        export_issues_to_github(github_url, gitlab_issues, github_issues, gitlab_max_id, github_max_id, github_hidden_max_id)
     
     # lists for comment changes
     updated_comments = [0, []]
     deleted_comments = [0, []]
 
     # export comments go GitHub
-    if "comments" in migrate_options:
+    if migrate_comments:
         updated_comments, deleted_comments = export_comments_to_github(github_url, gitlab_comments, github_comments, delete_missing_comments)
     
     updated_comments[1].sort()
